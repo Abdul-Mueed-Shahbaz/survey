@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+__pycache__
+.env
+
+# Static files (usually collected into the 'static' directory)
+/staticfiles/
+/static/
+*.map
+
+# Media files (usually collected into the 'media' directory)
+/media/
+
+# Secret Key
+*.secret
+
+# Ignore database settings file
+dbsettings.json
+
+# Ignore development settings
+development_settings.py
+
+# Ignore local development files
+local_settings.py
+
+# Ignore IDE-specific files
+.idea/
+.vscode/
+*.swp
+
+# Ignore virtual environment
+venv/
