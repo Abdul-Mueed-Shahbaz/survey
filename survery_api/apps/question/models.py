@@ -43,8 +43,10 @@ class Question(BaseModel):
         db_table = "question"
 
     def clean(self):
-        is_choice_type = "choice" in self.type.name.lower()
-        is_intuitive_type = "intuitive" in self.type.name.lower()
+        type_code = self.type.code.lower()
+
+        is_choice_type = ("radio" in type_code) or ("checkbox" in type_code)
+        is_intuitive_type = "intuitive" in type_code
 
         if (self.response_text and is_choice_type) or (
             self.options.exists() and is_intuitive_type
