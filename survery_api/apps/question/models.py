@@ -23,6 +23,9 @@ class QuestionType(BaseModel):
     class Meta:
         db_table = "question_type"
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class QuestionOption(BaseModel):
     option_text = CharField(max_length=255)
@@ -30,6 +33,9 @@ class QuestionOption(BaseModel):
 
     class Meta:
         db_table = "question_option"
+
+    def __str__(self) -> str:
+        return self.option_text
 
 
 class Question(BaseModel):
