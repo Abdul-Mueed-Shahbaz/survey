@@ -17,8 +17,8 @@ def image_upload(instance, filename):
 
 # Create your models here.
 class QuestionType(BaseModel):
-    name = CharField(max_length=255, null=False, blank=False)
-    code = CharField(max_length=255, null=False, blank=False)
+    name = CharField(max_length=255, null=False, blank=False, unique=True)
+    code = CharField(max_length=255, null=False, blank=False, unique=True)
 
     class Meta:
         db_table = "question_type"
