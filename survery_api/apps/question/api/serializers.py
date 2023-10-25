@@ -1,3 +1,4 @@
+from functools import partial
 import random
 from django.shortcuts import get_object_or_404
 from rest_framework.serializers import ModelSerializer, ValidationError
@@ -31,32 +32,47 @@ class QuestionSerializer(ModelSerializer):
             "options",
         ]
 
+    def get_choice_type(self, type_instance):
+        is_choice_type = ("radio" in type_instance.code) or (
+            "checkbox" in type_instance.code
+        )
+        is_intuitive_type = "intuitive" in type_instance.code
+        return is_choice_type, is_intuitive_type
+
+    def update(self, instance, validated_data):
+        validated_data.pop("options", [])
+        # TODO: Handle Options Data updation Later
+        return super().update(instance, validated_data)
+
+    def validate(self, attrs):
+        question_type = attrs.get("type")
+        is_choice_type, is_intuitive_type = self.get_choice_type(question_type)
+
+        response_text = attrs.get("response_text")
+        options_data = attrs.get("options", [])
+
+        if (response_text and is_choice_type) or (
+            len(options_data) and is_intuitive_type
+        ):
+            raise ValidationError("Invalid question type and response type")
+
+        if (
+            (is_choice_type and len(options_data) < 2)
+            or is_intuitive_type
+            and not response_text
+        ):
+            raise ValidationError("A valid user response data is required")
+
+        return attrs
+
     def create(self, validated_data):
         question_type = validated_data.get("type")
         try:
-            is_choice_type = ("radio" in question_type.code) or (
-                "checkbox" in question_type.code
-            )
-            is_intuitive_type = "intuitive" in question_type.code
-
-            response_text = validated_data.get("response_text")
-            options_data = validated_data.pop("options", [])
-
-            if (response_text and is_choice_type) or (
-                len(options_data) and is_intuitive_type
-            ):
-                raise ValidationError("Invalid question type and response type")
-
-            if (
-                (is_choice_type and not len(options_data))
-                or is_intuitive_type
-                and not response_text
-            ):
-                raise ValidationError("A valid answer data is required")
+            is_choice_type, _ = self.get_choice_type(question_type)
 
             if is_choice_type:
                 option_serializer = QuestionOptionSerializer(
-                    data=options_data, many=True
+                    data=validated_data.pop("options", []), many=True
                 )
                 option_serializer.is_valid(raise_exception=True)
                 options = option_serializer.save()

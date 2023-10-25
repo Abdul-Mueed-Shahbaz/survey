@@ -5,7 +5,6 @@ from apps.question.api.serializers import (
     QuestionTypeSerializer,
 )
 from apps.question.models import Question, QuestionOption, QuestionType
-from django.db import transaction
 
 
 class QuestionTypeViewSet(ModelViewSet):
@@ -18,7 +17,9 @@ class QuestionTypeViewSet(ModelViewSet):
 
 class QuestionOptionViewSet(ModelViewSet):
     serializer_class = QuestionOptionSerializer
-    queryset = QuestionOption.objects.all().order_by("-created_on")
+    queryset = QuestionOption.objects.filter(is_deleted=False, is_active=True).order_by(
+        "-created_on"
+    )
     permission_classes = []
     authentication_classes = []
 
