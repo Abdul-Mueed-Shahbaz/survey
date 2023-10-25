@@ -40,8 +40,8 @@ class QuestionSerializer(ModelSerializer):
         return is_choice_type, is_intuitive_type
 
     def update(self, instance, validated_data):
-        validated_data.pop("options", [])
         # TODO: Handle Options Data updation Later
+        validated_data.pop("options", [])
         return super().update(instance, validated_data)
 
     def validate(self, attrs):

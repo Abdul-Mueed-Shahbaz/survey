@@ -18,6 +18,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework.routers import DefaultRouter
+from apps.form.api.views import FormViewSet
 
 from apps.question.api.views import (
     QuestionOptionViewSet,
@@ -36,6 +37,7 @@ router.register(
     r"question-option", QuestionOptionViewSet, basename="Question Option CRUD"
 )
 router.register(r"question-type", QuestionTypeViewSet, basename="Question Type CRUD")
+router.register(r"form", FormViewSet, basename="Form CRUD")
 
 
 urlpatterns = [
